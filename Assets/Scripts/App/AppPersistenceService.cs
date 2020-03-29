@@ -35,7 +35,7 @@ public class AppPersistenceService
         foreach (var kvp in _snapshotHandlersByFileName)
         {
             var data = kvp.Value.TakeSnapshot();
-            File.WriteAllText(GetPath(kvp.Key), data);
+            File.WriteAllText(PersistenceHelper.GetPath(_persistentDataPath, kvp.Key), data);
         } 
     }
 
@@ -43,7 +43,7 @@ public class AppPersistenceService
     {
         try
         {
-            var path = GetPath(fileName);
+            var path = PersistenceHelper.GetPath(_persistentDataPath, fileName);
             if (!File.Exists(path)) return string.Empty;
             var result = File.ReadAllText(path);
             return result;
@@ -54,9 +54,5 @@ public class AppPersistenceService
         }
         return string.Empty;
     }
-
-    private string GetPath(string fileName)
-    {
-        return Path.Combine(_persistentDataPath, fileName);
-    }
+  
 }
