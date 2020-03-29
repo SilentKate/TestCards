@@ -19,7 +19,6 @@ public class AppPersistenceService
     public void Register(ISnapshotHandler snapshotHandler, string fileName)
     {
         _snapshotHandlersByFileName[fileName] = snapshotHandler;
-        TryCreateFile(GetPath(fileName));
     }
     
     public void ApplyFromSaveFile()
@@ -44,7 +43,9 @@ public class AppPersistenceService
     {
         try
         {
-            var result = File.ReadAllText(GetPath(fileName));
+            var path = GetPath(fileName);
+            if (!File.Exists(path)) return string.Empty;
+            var result = File.ReadAllText(path);
             return result;
         }
         catch (Exception e)
@@ -57,13 +58,5 @@ public class AppPersistenceService
     private string GetPath(string fileName)
     {
         return Path.Combine(_persistentDataPath, fileName);
-    }
-    
-    private void TryCreateFile(string persistentDataPath)
-    {
-        if (!File.Exists(persistentDataPath))
-        {
-            File.Create(persistentDataPath);
-        }
     }
 }
