@@ -1,31 +1,27 @@
-using JetBrains.Annotations;
-using UnityEngine;
+using System;
 
-[RequireComponent(typeof(CardController))]
-[RequireComponent(typeof(CardView))]
-public class CardController : MonoBehaviour
+public class CardController
 {
-    private CardView _cardView;
-    private CardBehaviour _cardBehaviour;
-    private CardState _cardState;
+    public event Action<CardController> Selected;
+    public event Action<CardController> RemoveHandled;
+    
+    public int Id { get; set; }
+    public CardView CardView { private get; set; }
+    
+    private readonly CardBehaviour _cardBehaviour;
+    private readonly CardState _cardState;
 
-    [UsedImplicitly]
-    private void Awake()
+//    public CardController()
+//    {
+//        _cardBehaviour = CardView.GetComponent<CardBehaviour>();
+//        _cardState = CardState.None;
+//    }
+    
+    public void HandleRemove()
     {
-        _cardView = GetComponent<CardView>();
-        _cardBehaviour = GetComponent<CardBehaviour>();
-        _cardState = CardState.None;
     }
 
-    public void Load()
-    {
-    }
-
-    public void Show()
-    {
-    }
-
-    public void Hide()
+    public void Reset()
     {
     }
 }

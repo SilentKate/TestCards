@@ -24,6 +24,13 @@ public class CardBehaviour : MonoBehaviour, IPointerClickHandler
         _animator = GetComponent<Animator>();
         _currentTrigger = 0;
     }
+
+    [UsedImplicitly]
+    private void Start()
+    {
+        _currentTrigger = Animator.StringToHash("Appear");
+        _animator.SetTrigger(_currentTrigger);
+    }
     
     public void OnPointerClick(PointerEventData eventData)
     {

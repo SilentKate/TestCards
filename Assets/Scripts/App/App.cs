@@ -10,14 +10,15 @@ public class App : MonoBehaviour
     public static T Resolve<T>() where T : class 
     {
         var type = typeof(T);
-        if (_services.TryGetValue(type, out var service)) return service as T;
+        if (_dependencies.TryGetValue(type, out var service)) return service as T;
         throw new InvalidOperationException("App :: Services : Try to access a non-existent service");
     }
-    private static readonly Dictionary<Type, object> _services = new Dictionary<Type, object>();
+    private static readonly Dictionary<Type, object> _dependencies = new Dictionary<Type, object>();
 
     [SerializeField] private AppResourcesConfig _resourcesConfig;
     [SerializeField] private MenuScreenView _menuScreenView;
     [SerializeField] private LevelScreenView _levelScreenView;
+    [SerializeField] private RulesCollection _rulesCollection;
     
     private UserDataStorage _userDataStorage;
     private AppPersistenceService _appPersistenceService;
@@ -39,14 +40,21 @@ public class App : MonoBehaviour
         _userDataStorage = new UserDataStorage();
         _appPersistenceService = new AppPersistenceService(Path.Combine(Application.persistentDataPath, "local"));
         SetupUserPersistence(_userDataStorage);
+        SetupAssetsServices();
         SetupUserServices(_userDataStorage);
         SetupGameServices();
         ValidateResources();
     }
 
+    private void SetupAssetsServices()
+    {
+        var storage = new AssetsStorage();
+        _dependencies.Add(typeof(AssetsStorage), storage);
+        _assetsValidator = new ExternalAssetValidator(_resourcesConfig.GetSources(), storage);
+    }
+
     private void ValidateResources()
     {
-        _assetsValidator = new ExternalAssetValidator(_resourcesConfig.GetSources());
         var chain = _assetsValidator.DownloadResourcesIfNeed();
         chain.Done += success => OnValidateResourcesDone(chain, success);
         chain.Process();
@@ -75,15 +83,16 @@ public class App : MonoBehaviour
 
     private void SetupUserServices(UserDataStorage userDataStorage)
     {
-        _services.Add(typeof(IResultService), new UserResultService(userDataStorage.Results));
+        _dependencies.Add(typeof(IResultService), new UserResultService(userDataStorage.Results));
     }
     
     private void SetupGameServices()
     {
         var gameFlowService = new GameFlowService(new GameFlowContainer());
-        _services.Add(typeof(IGameFlowService), gameFlowService);
-        _services.Add(typeof(MenuScreenController), new MenuScreenController(gameFlowService, _menuScreenView));
-        _services.Add(typeof(LevelScreenController), new LevelScreenController(gameFlowService, _levelScreenView));
+        _dependencies.Add(typeof(IGameFlowService), gameFlowService);
+        _dependencies.Add(typeof(MenuScreenController), new MenuScreenController(gameFlowService, _menuScreenView));
+        _dependencies.Add(typeof(LevelScreenController), new LevelScreenController(gameFlowService, _levelScreenView));
+        _dependencies.Add(typeof(IRoundController), new RoundController(Resolve<IResultService>(), _rulesCollection));
     }
 
     [UsedImplicitly]

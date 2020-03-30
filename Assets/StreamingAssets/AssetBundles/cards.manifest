@@ -1,15 +1,19 @@
 ManifestFileVersion: 0
-CRC: 2618766622
+CRC: 2274180531
 Hashes:
   AssetFileHash:
     serializedVersion: 2
-    Hash: 55ad5258dced8cd80dfdbe39e3cea563
+    Hash: 33f79f30b6a69a8f889ab702a3a3d6b6
   TypeTreeHash:
     serializedVersion: 2
-    Hash: 8f81471f4cfc7bf93c7fa752ebb4eb40
+    Hash: 0bd92dcd2bb7121bef5103a7d0253384
 HashAppended: 0
 ClassTypes:
 - Class: 28
+  Script: {instanceID: 0}
+- Class: 114
+  Script: {fileID: 11500000, guid: 6d6a59507b54de04cba4eeeb38dfeec9, type: 3}
+- Class: 115
   Script: {instanceID: 0}
 - Class: 213
   Script: {instanceID: 0}
@@ -17,4 +21,5 @@ ClassTypes:
   Script: {instanceID: 0}
 Assets:
 - Assets/Images/Cards/Cards.spriteatlas
+- Assets/Configs/CardCollection.asset
 Dependencies: []

@@ -9,21 +9,27 @@ public class GameFlowService : IGameFlowService
     {
         { GameFlowState.None, () => new AlwaysSuccessStateHandler()},
         { GameFlowState.Menu, () => new PrepareMenuHandler(App.Resolve<MenuScreenController>())},
-        { GameFlowState.Level, () => new PrepareLevelHandler(App.Resolve<LevelScreenController>())}
+        { GameFlowState.Level, () => new PrepareLevelHandler(
+            App.Resolve<LevelScreenController>(),
+            App.Resolve<IRoundController>())}
     }; 
     
     private readonly Dictionary<GameFlowState, Func<IGameStateHandler>> _stateEnterFactories = new Dictionary<GameFlowState, Func<IGameStateHandler>>
     {
         { GameFlowState.None, () => new AlwaysSuccessStateHandler()},
         { GameFlowState.Menu, () => new EnterMenuHandler(App.Resolve<MenuScreenController>())},
-        { GameFlowState.Level, () => new EnterLevelHandler(App.Resolve<LevelScreenController>())}
+        { GameFlowState.Level, () => new EnterLevelHandler(
+            App.Resolve<LevelScreenController>(),
+            App.Resolve<IRoundController>())}
     };
     
     private readonly Dictionary<GameFlowState, Func<IGameStateHandler>> _stateExitFactories = new Dictionary<GameFlowState, Func<IGameStateHandler>>
     {
         { GameFlowState.None, () => new AlwaysSuccessStateHandler()},
         { GameFlowState.Menu, () => new ExitMenuHandler(App.Resolve<MenuScreenController>())},
-        { GameFlowState.Level, () => new ExitLevelHandler(App.Resolve<LevelScreenController>())}
+        { GameFlowState.Level, () => new ExitLevelHandler(
+            App.Resolve<LevelScreenController>(),
+            App.Resolve<IRoundController>())}
     };
 
     private readonly IGameFlowContainer _container;
