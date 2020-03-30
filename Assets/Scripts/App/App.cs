@@ -34,6 +34,7 @@ public class App : MonoBehaviour
         _appPersistenceService = new AppPersistenceService(Path.Combine(Application.persistentDataPath, "local"));
         SetupUserPersistence(_userDataStorage);
         SetupUserServices(_userDataStorage);
+        SetupGameServices();
         ValidateResources();
     }
 
@@ -51,12 +52,29 @@ public class App : MonoBehaviour
         if (success)
         {
             Debug.Log("Hooray!");
+            Resolve<IGameFlowService>().ChangeState();
         }
         else
         {
             _assetsValidator.ClearCachedVersions();
             Application.Quit();
         }
+    }
+
+    private void SetupUserPersistence(UserDataStorage userDataStorage)
+    {
+        _appPersistenceService.Register(userDataStorage.Results, "results");
+        _appPersistenceService.ApplyFromSaveFile();
+    }
+
+    private void SetupUserServices(UserDataStorage userDataStorage)
+    {
+        _services.Add(typeof(IResultService), new UserResultService(userDataStorage.Results));
+    }
+    
+    private void SetupGameServices()
+    {
+        _services.Add(typeof(IGameFlowService), new GameFlowService(new GameFlowContainer()));
     }
 
     [UsedImplicitly]
@@ -86,22 +104,5 @@ public class App : MonoBehaviour
             }
             Debug.Log(str);
         }
-    }
-
-    private void SetupUserPersistence(UserDataStorage userDataStorage)
-    {
-        _appPersistenceService.Register(userDataStorage.Results, "results");
-        
-        _appPersistenceService.ApplyFromSaveFile();
-    }
-
-    private void SetupUserServices(UserDataStorage userDataStorage)
-    {
-        _services.Add(typeof(IResultService), CreateUserResultService(userDataStorage.Results));
-    }
-
-    private IResultService CreateUserResultService(IResultContainer container)
-    {
-        return new UserResultService(container);
     }
 }
