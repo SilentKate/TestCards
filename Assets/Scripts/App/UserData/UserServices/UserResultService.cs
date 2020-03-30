@@ -17,11 +17,12 @@ public class UserResultService : IResultService
         _container.AddResult(result);
     }
 
-    public IEnumerable<Result> GetResults(
-        Func<IEnumerable<Result>,
-        IEnumerable<Result>> selector = null)
+    public List<Result> GetResults(
+        Func<List<Result>,
+            List<Result>> selector = null)
     {
-        var results = _container.GetResults();
+        var results = new List<Result>();
+        results.AddRange(_container.GetResults());
         return selector != null 
             ? selector(results)
             : results;

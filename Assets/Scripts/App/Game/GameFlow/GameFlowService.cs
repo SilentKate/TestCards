@@ -7,19 +7,22 @@ public class GameFlowService : IGameFlowService
 {
     private readonly Dictionary<GameFlowState, Func<IGameStateHandler>> _statePrepareFactories = new Dictionary<GameFlowState, Func<IGameStateHandler>>
     {
-        { GameFlowState.Menu, () => new PrepareMenuHandler()},
+        { GameFlowState.None, () => new AlwaysSuccessStateHandler()},
+        { GameFlowState.Menu, () => new PrepareMenuHandler(App.Resolve<MenuScreenController>())},
         { GameFlowState.Level, () => new PrepareLevelHandler()}
     }; 
     
     private readonly Dictionary<GameFlowState, Func<IGameStateHandler>> _stateEnterFactories = new Dictionary<GameFlowState, Func<IGameStateHandler>>
     {
-        { GameFlowState.Menu, () => new EnterMenuHandler()},
+        { GameFlowState.None, () => new AlwaysSuccessStateHandler()},
+        { GameFlowState.Menu, () => new EnterMenuHandler(App.Resolve<MenuScreenController>())},
         { GameFlowState.Level, () => new EnterLevelHandler()}
     };
     
     private readonly Dictionary<GameFlowState, Func<IGameStateHandler>> _stateExitFactories = new Dictionary<GameFlowState, Func<IGameStateHandler>>
     {
-        { GameFlowState.Menu, () => new ExitMenuHandler()},
+        { GameFlowState.None, () => new AlwaysSuccessStateHandler()},
+        { GameFlowState.Menu, () => new ExitMenuHandler(App.Resolve<MenuScreenController>())},
         { GameFlowState.Level, () => new ExitLevelHandler()}
     };
 
@@ -34,17 +37,16 @@ public class GameFlowService : IGameFlowService
     public void ChangeState()
     {
         if (_chain != null) return;
-        var nextState = _container.NextState;
-        if (nextState == _container.CurrentState) return;
+        if (_container.NextState == _container.CurrentState) return;
 
-        _statePrepareFactories.TryGetValue(nextState, out var prepare);
-        _stateEnterFactories.TryGetValue(nextState, out var enter);
-        _stateExitFactories.TryGetValue(nextState, out var exit);
+        _stateExitFactories.TryGetValue(_container.CurrentState, out var exitCurrent);
+        _statePrepareFactories.TryGetValue(_container.NextState, out var prepareNext);
+        _stateEnterFactories.TryGetValue(_container.NextState, out var enterNext);
         
         _chain = new SimpleChain();
-        _chain.Add(new ProcessStateHandler(prepare));
-        _chain.Add(new ProcessStateHandler(enter));
-        _chain.Add(new ProcessStateHandler(exit));
+        _chain.Add(new ProcessStateHandler(exitCurrent));
+        _chain.Add(new ProcessStateHandler(prepareNext));
+        _chain.Add(new ProcessStateHandler(enterNext));
         _chain.Done += OnChainDone;
         _chain.Process();
     }

@@ -16,6 +16,7 @@ public class App : MonoBehaviour
     private static readonly Dictionary<Type, object> _services = new Dictionary<Type, object>();
 
     [SerializeField] private AppResourcesConfig _resourcesConfig;
+    [SerializeField] private MenuScreenView _menuScreenView;
     
     private UserDataStorage _userDataStorage;
     private AppPersistenceService _appPersistenceService;
@@ -30,6 +31,9 @@ public class App : MonoBehaviour
     [UsedImplicitly]
     private void Start()
     {
+        _menuScreenView.Hide();
+        
+        
         _userDataStorage = new UserDataStorage();
         _appPersistenceService = new AppPersistenceService(Path.Combine(Application.persistentDataPath, "local"));
         SetupUserPersistence(_userDataStorage);
@@ -74,7 +78,9 @@ public class App : MonoBehaviour
     
     private void SetupGameServices()
     {
-        _services.Add(typeof(IGameFlowService), new GameFlowService(new GameFlowContainer()));
+        var gameFlowService = new GameFlowService(new GameFlowContainer());
+        _services.Add(typeof(IGameFlowService), gameFlowService);
+        _services.Add(typeof(MenuScreenController), new MenuScreenController(gameFlowService, _menuScreenView));
     }
 
     [UsedImplicitly]

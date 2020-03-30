@@ -1,6 +1,6 @@
 ﻿using System;
 
-public class EnterMenuHandler : IGameStateHandler
+public class AlwaysSuccessStateHandler : IGameStateHandler
 {
     public event Action<bool> Done;
     
@@ -12,4 +12,5 @@ public class EnterMenuHandler : IGameStateHandler
     public void Dispose()
     {
     }
+
 }
