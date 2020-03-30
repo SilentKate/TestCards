@@ -1,15 +1,32 @@
 ﻿using System;
+using JetBrains.Annotations;
 
 public class ExitLevelHandler : IGameStateHandler
 {
-    public void Dispose()
-    {
-        throw new NotImplementedException();
-    }
-
     public event Action<bool> Done;
+    
+    private readonly IScreenController _screenController;
+
+    public ExitLevelHandler([NotNull] IScreenController screenController)
+    {
+        _screenController = screenController ?? throw new ArgumentNullException(nameof(screenController));
+    }
+    
     public void Handle()
     {
-        throw new NotImplementedException();
+        _screenController.Hidden += OnHidden;
+        _screenController.Hide();
+    }
+
+    private void OnHidden()
+    {
+        _screenController.Hidden -= OnHidden; 
+        _screenController.Cleanup();
+        Done?.Invoke(true);
+    }
+
+    public void Dispose()
+    {
+        Done = null;
     }
 }

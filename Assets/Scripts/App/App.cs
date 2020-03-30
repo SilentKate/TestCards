@@ -17,6 +17,7 @@ public class App : MonoBehaviour
 
     [SerializeField] private AppResourcesConfig _resourcesConfig;
     [SerializeField] private MenuScreenView _menuScreenView;
+    [SerializeField] private LevelScreenView _levelScreenView;
     
     private UserDataStorage _userDataStorage;
     private AppPersistenceService _appPersistenceService;
@@ -32,6 +33,7 @@ public class App : MonoBehaviour
     private void Start()
     {
         _menuScreenView.Hide();
+        _levelScreenView.Hide();
         
         
         _userDataStorage = new UserDataStorage();
@@ -81,6 +83,7 @@ public class App : MonoBehaviour
         var gameFlowService = new GameFlowService(new GameFlowContainer());
         _services.Add(typeof(IGameFlowService), gameFlowService);
         _services.Add(typeof(MenuScreenController), new MenuScreenController(gameFlowService, _menuScreenView));
+        _services.Add(typeof(LevelScreenController), new LevelScreenController(gameFlowService, _levelScreenView));
     }
 
     [UsedImplicitly]
@@ -94,21 +97,14 @@ public class App : MonoBehaviour
     {
         if (Input.GetKey(KeyCode.A))
         {
-            var resultsService = App.Resolve<IResultService>();
+            var resultsService = Resolve<IResultService>();
             var result = new Result {score = Random.Range(5, 100)};
             resultsService.SaveResult(result);
         }
-
-        if (Input.GetKey(KeyCode.S))
+        
+        if (Input.GetKey(KeyCode.Escape))
         {
-            var resultsService = App.Resolve<IResultService>();
-            var results = resultsService.GetResults();
-            var str = "Current results: ";
-            foreach (var result in results)
-            {
-                str += $"; {result.score}";
-            }
-            Debug.Log(str);
+            Application.Quit();
         }
     }
 }

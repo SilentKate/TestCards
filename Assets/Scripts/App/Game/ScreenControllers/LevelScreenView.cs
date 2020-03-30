@@ -1,16 +1,14 @@
-﻿using System.Text;
-using UnityEngine;
+﻿using UnityEngine;
 using UnityEngine.UI;
 
-public class MenuScreenView : MonoBehaviour, IDataContextHandler<MenuScreenViewModel>
+public class LevelScreenView : MonoBehaviour, IDataContextHandler<LevelScreenViewModel>
 {
     [SerializeField] private CanvasGroup _wrapper;
-    [SerializeField] private Text _label;
     [SerializeField] private Button _button;
     
-    private MenuScreenViewModel _viewModel;
+    private LevelScreenViewModel _viewModel;
 
-    public MenuScreenViewModel DataContext
+    public LevelScreenViewModel DataContext
     {
         set
         {
@@ -35,24 +33,16 @@ public class MenuScreenView : MonoBehaviour, IDataContextHandler<MenuScreenViewM
     
     private void Setup()
     {
-        var strBuilder = new StringBuilder();
-        strBuilder.Append("User best results:");
-        foreach (var result in _viewModel.Results)
-        {
-            strBuilder.Append($"{result.score}; ");
-        }
-        _label.text = strBuilder.ToString();
         _button.onClick.AddListener(OnClicked);
     }
 
     private void Cleanup()
     {
-        _label.text = string.Empty;
         _button.onClick.RemoveListener(OnClicked);
     }
     
     private void OnClicked()
     {
-        _viewModel.LevelButtonAction();
+        _viewModel.ExitButtonAction();
     }
 }
