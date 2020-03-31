@@ -2,5 +2,7 @@ public enum CardState
 {
     None,
     ContentShown,
-    ContentHidden
+    ContentHidden,
+    Disappear,
+    Appeared
 }

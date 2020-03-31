@@ -1,27 +1,42 @@
 using System;
+using UnityEngine;
 
-public class CardController
+public class CardController : IDisposable
 {
     public event Action<CardController> Selected;
     public event Action<CardController> RemoveHandled;
     
-    public int Id { get; set; }
-    public CardView CardView { private get; set; }
+    public Transform Transform => _cardView.transform;
+    public int Id { get; private set; }
     
+    private readonly CardView _cardView;
     private readonly CardBehaviour _cardBehaviour;
-    private readonly CardState _cardState;
 
-//    public CardController()
-//    {
-//        _cardBehaviour = CardView.GetComponent<CardBehaviour>();
-//        _cardState = CardState.None;
-//    }
-    
+    public CardController(CardView cardView, int id)
+    {
+        _cardView = cardView;
+        Id = id;
+        _cardBehaviour = _cardView.GetComponent<CardBehaviour>();
+        _cardBehaviour.OnContentShown += OnContentShown;
+    }
+
+    private void OnContentShown()
+    {
+        Selected?.Invoke(this);
+    }
+
     public void HandleRemove()
     {
+        _cardBehaviour.HandleRemove();
     }
 
     public void Reset()
     {
+        _cardBehaviour.Reset();
+    }
+
+    public void Dispose()
+    {
+        _cardBehaviour.OnContentShown -= OnContentShown;
     }
 }

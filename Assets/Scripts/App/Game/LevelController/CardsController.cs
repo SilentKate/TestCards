@@ -20,12 +20,17 @@ public class CardsController : IDisposable
     private List<CardController> _currentCards;
     private List<CardController> _processingCards;
     private SpriteAtlas _atlas;
+    
+    private readonly SimpleGrid _evenGrid;
+    private readonly SimpleGrid _oddGrid;
 
     public CardsController()
     {
         _assets = App.Resolve<AssetsStorage>();
         _configs = _assets.GetCardAsset<CardConfigsCollection>("CardCollection");
         _atlas = _assets.GetCardAsset<SpriteAtlas>("Cards");
+        _evenGrid = Object.FindObjectOfType<EvenGrid>();
+        _oddGrid = Object.FindObjectOfType<OddGrid>();
     }
     
     public void Dispose()
@@ -40,9 +45,20 @@ public class CardsController : IDisposable
         int bunchesCapacity)
     {
         Reset();
+        
+        var totalCount = bunchesCount * bunchesCapacity;
+        var countInRow = totalCount / GameSettings.RowCount;
+        var grid = countInRow % 2 == 0 ? _evenGrid : _oddGrid;
+        while (totalCount > grid.Points.Length)
+        {
+            bunchesCount--;
+            totalCount = bunchesCount * bunchesCapacity;
+            grid = countInRow % 2 == 0 ? _evenGrid : _oddGrid;
+        }
+        
         var configs = _configs.GetRandomConfigs(bunchesCount);
         _currentCards = GetCards(configs, bunchesCapacity);
-        LayoutCards(_currentCards);
+        LayoutCards(_currentCards, grid);
     }
 
     public void RemoveBunches(List<int> ids)
@@ -60,6 +76,7 @@ public class CardsController : IDisposable
     {
         card.RemoveHandled -= OnCardRemoveHandled;
         _processingCards.Remove(card);
+        card.Dispose();
         if (_processingCards.Count > 0) return;
         BunchRemoved?.Invoke();
     }
@@ -84,11 +101,17 @@ public class CardsController : IDisposable
         CardSelected?.Invoke();
     }
     
-    private void LayoutCards(List<CardController> currentCards)
+    private void LayoutCards(
+        List<CardController> currentCards, 
+        SimpleGrid grid)
     {
-        _currentCards.Shuffle();
-        
-        
+        currentCards.Shuffle();
+        for (var i = 0; i < currentCards.Count; i++)
+        {
+            var card = currentCards[i];
+            var point = grid.Points[i];
+            card.Transform.position = point.transform.position;
+        }
     }
 
     private List<CardController> GetCards(
@@ -100,11 +123,7 @@ public class CardsController : IDisposable
         {
             for (var i = 0; i < bunchesCapacity; i++)
             {
-                var card = new CardController
-                {
-                    Id = config.id,
-                    CardView = GetView(config),
-                };
+                var card = new CardController(GetView(config), config.id);
                 card.Selected += AddSelected;
                 result.Add(card);
             }

@@ -35,6 +35,10 @@ public class RoundController : IRoundController
     {
         _currentRules = _rulesCollection.GetRandom();
         _cardsController.SpawnBunches(_currentRules.bunchesCount, _currentRules.bunchCapacity);
+        if (_cardsController.TotalCardsCount == 0)
+        {
+            throw new InvalidOperationException("RoundController :: StartRound : Can't spawn cards!");
+        }
     }
 
     private void OnCardCardSelected()

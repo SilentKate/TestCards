@@ -45,6 +45,7 @@ GameObject:
   - component: {fileID: 847726764480177542}
   - component: {fileID: 3635679064401008708}
   - component: {fileID: 5676419970835544293}
+  - component: {fileID: 3799704096183388976}
   m_Layer: 0
   m_Name: CardView
   m_TagString: Untagged
@@ -112,7 +113,28 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: eae7c35bb3214c3c838bb8ded447a53d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _configs: []
+  _configs:
+  - state: 4
+    animationTrigger: Appear
+  - state: 3
+    animationTrigger: Disappear
+  - state: 1
+    animationTrigger: TurnForeground
+  - state: 2
+    animationTrigger: TurnBackground
+--- !u!65 &3799704096183388976
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 847726764480177540}
+  m_Material: {fileID: 0}
+  m_IsTrigger: 0
+  m_Enabled: 1
+  serializedVersion: 2
+  m_Size: {x: 4.66, y: 4.97, z: 0.44}
+  m_Center: {x: 0, y: 0, z: 0}
 --- !u!1 &847726764748991073
 GameObject:
   m_ObjectHideFlags: 0

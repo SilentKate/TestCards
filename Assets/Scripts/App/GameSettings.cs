@@ -5,4 +5,6 @@
 
     public const int MenuSceneId = 1;
     public const int LevelSceneId = 2;
+
+    public const int RowCount = 2;
 }
