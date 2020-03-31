@@ -7,6 +7,7 @@ public class MenuScreenView : MonoBehaviour, IDataContextHandler<MenuScreenViewM
     [SerializeField] private GameObject _wrapper;
     [SerializeField] private Text _label;
     [SerializeField] private Button _button;
+    [SerializeField] private Button _exitButton;
     
     private MenuScreenViewModel _viewModel;
 
@@ -42,14 +43,21 @@ public class MenuScreenView : MonoBehaviour, IDataContextHandler<MenuScreenViewM
         }
         _label.text = strBuilder.ToString();
         _button.onClick.AddListener(OnClicked);
+        _exitButton.onClick.AddListener(OnExitClicked);
     }
 
     private void Cleanup()
     {
         _label.text = string.Empty;
         _button.onClick.RemoveListener(OnClicked);
+        _exitButton.onClick.RemoveListener(OnExitClicked);
     }
-    
+
+    private void OnExitClicked()
+    {
+        Application.Quit();
+    }
+
     private void OnClicked()
     {
         _viewModel.LevelButtonAction();
