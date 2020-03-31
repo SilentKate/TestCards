@@ -9,7 +9,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 847726763942816172}
-  m_Layer: 8
+  m_Layer: 0
   m_Name: animationContainer
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -158,7 +158,7 @@ GameObject:
   m_Component:
   - component: {fileID: 847726765513051363}
   - component: {fileID: 847726765513051388}
-  m_Layer: 8
+  m_Layer: 0
   m_Name: background
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -237,7 +237,7 @@ GameObject:
   m_Component:
   - component: {fileID: 847726765644447324}
   - component: {fileID: 847726765644447325}
-  m_Layer: 8
+  m_Layer: 0
   m_Name: foreground
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -316,7 +316,7 @@ GameObject:
   m_Component:
   - component: {fileID: 8626348770037195711}
   - component: {fileID: 8338551634355071012}
-  m_Layer: 8
+  m_Layer: 0
   m_Name: background (1)
   m_TagString: Untagged
   m_Icon: {fileID: 0}

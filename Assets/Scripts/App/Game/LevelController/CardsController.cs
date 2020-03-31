@@ -77,19 +77,24 @@ public class CardsController : IDisposable
         card.RemoveHandled -= OnCardRemoveHandled;
         _processingCards.Remove(card);
         card.Dispose();
-        if (_processingCards.Count > 0) return;
+        ClearSelected();
         BunchRemoved?.Invoke();
     }
 
     public void Reset()
     {
-        CurrentSelectedCount = 0;
-        _selectedCountsById.Clear();
+        ClearSelected();
         if (_currentCards == null) return;
         foreach (var card in _currentCards)
         {
             card.Reset();
         }
+    }
+
+    private void ClearSelected()
+    {
+        CurrentSelectedCount = 0;
+        _selectedCountsById.Clear();
     }
 
     private void AddSelected(CardController cardController)

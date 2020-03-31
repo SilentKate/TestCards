@@ -9,6 +9,8 @@ public class RoundController : IRoundController
     private CardsController _cardsController;
     private RulesCollection.RoundRules _currentRules;
 
+    private int _roundCompletedCount = 0;
+    
     public RoundController(
         [NotNull] IResultService resultService,
         [NotNull] RulesCollection rulesCollection)
@@ -19,6 +21,7 @@ public class RoundController : IRoundController
 
     public void Setup()
     {
+        _roundCompletedCount = 0;
         _cardsController = new CardsController();
         _cardsController.CardSelected += OnCardCardSelected;
         _cardsController.BunchRemoved += OnBunchRemoved;
@@ -29,6 +32,10 @@ public class RoundController : IRoundController
         _cardsController.CardSelected -= OnCardCardSelected;
         _cardsController.BunchRemoved -= OnBunchRemoved;
         _cardsController.Dispose();
+        if (_roundCompletedCount > 0)
+        {
+            _resultService.SaveResult(new Result {score = _roundCompletedCount});
+        }
     }
 
     public void StartRound()
@@ -64,6 +71,7 @@ public class RoundController : IRoundController
     private void OnBunchRemoved()
     {
         if (_cardsController.TotalCardsCount > 0) return;
+        _roundCompletedCount++;
         StartRound();    
     }
 }

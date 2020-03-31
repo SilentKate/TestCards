@@ -1,5 +1,6 @@
 using System;
 using UnityEngine;
+using Object = UnityEngine.Object;
 
 public class CardController : IDisposable
 {
@@ -43,6 +44,7 @@ public class CardController : IDisposable
 
     public void Dispose()
     {
+        Object.Destroy(_cardView.gameObject);
         _cardBehaviour.OnContentShown -= OnContentShown;
         _cardBehaviour.RemoveHandled -= OnRemoveHandled;
     }

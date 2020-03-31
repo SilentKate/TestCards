@@ -4,7 +4,7 @@ using UnityEngine.UI;
 
 public class MenuScreenView : MonoBehaviour, IDataContextHandler<MenuScreenViewModel>
 {
-    [SerializeField] private CanvasGroup _wrapper;
+    [SerializeField] private GameObject _wrapper;
     [SerializeField] private Text _label;
     [SerializeField] private Button _button;
     
@@ -25,18 +25,17 @@ public class MenuScreenView : MonoBehaviour, IDataContextHandler<MenuScreenViewM
 
     public void Show()
     {
-        _wrapper.alpha = 1;
+        _wrapper.SetActive(true);
     }
 
     public void Hide()
     {
-        _wrapper.alpha = 0;
+        _wrapper.SetActive(false);
     }
     
     private void Setup()
     {
         var strBuilder = new StringBuilder();
-        strBuilder.Append("User best results:");
         foreach (var result in _viewModel.Results)
         {
             strBuilder.Append($"{result.score}; ");
