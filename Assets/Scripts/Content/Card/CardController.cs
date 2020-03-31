@@ -18,11 +18,17 @@ public class CardController : IDisposable
         Id = id;
         _cardBehaviour = _cardView.GetComponent<CardBehaviour>();
         _cardBehaviour.OnContentShown += OnContentShown;
+        _cardBehaviour.RemoveHandled += OnRemoveHandled;
     }
 
     private void OnContentShown()
     {
         Selected?.Invoke(this);
+    }
+    
+    private void OnRemoveHandled()
+    {
+        RemoveHandled?.Invoke(this);
     }
 
     public void HandleRemove()
@@ -38,5 +44,6 @@ public class CardController : IDisposable
     public void Dispose()
     {
         _cardBehaviour.OnContentShown -= OnContentShown;
+        _cardBehaviour.RemoveHandled -= OnRemoveHandled;
     }
 }

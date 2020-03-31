@@ -14,6 +14,7 @@ public class CardBehaviour : MonoBehaviour, IPointerDownHandler
     }
 
     public event Action OnContentShown;
+    public event Action RemoveHandled;
     
     [SerializeField] private StateConfig[] _configs;
     
@@ -52,9 +53,15 @@ public class CardBehaviour : MonoBehaviour, IPointerDownHandler
     }
     
     [UsedImplicitly]
-    private void Appeared()
+    public void Disappeared()
     {
-//        Reset();
+        RemoveHandled?.Invoke();
+    }
+    
+    [UsedImplicitly]
+    public void Appeared()
+    {
+        Reset();
     }
     
     [UsedImplicitly]
@@ -64,7 +71,7 @@ public class CardBehaviour : MonoBehaviour, IPointerDownHandler
         if (State == CardState.ContentHidden || State == CardState.Appeared)
         {
             State = CardState.ContentShown;
-            Selected();
+//            Selected();
         }
     }
 
@@ -94,9 +101,4 @@ public class CardBehaviour : MonoBehaviour, IPointerDownHandler
         _currentTrigger = newTrigger;
         _animator.SetTrigger(_currentTrigger);
     }
-
-//    public void OnPointerDown(PointerEventData eventData)
-//    {
-//        throw new NotImplementedException();
-//    }
 }
