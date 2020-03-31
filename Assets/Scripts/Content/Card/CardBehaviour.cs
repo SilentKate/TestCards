@@ -4,7 +4,7 @@ using UnityEngine;
 using UnityEngine.EventSystems;
 
 [RequireComponent(typeof(Animator))]
-public class CardBehaviour : MonoBehaviour, IPointerClickHandler
+public class CardBehaviour : MonoBehaviour, IPointerDownHandler
 {
     [Serializable]
     public struct StateConfig
@@ -46,7 +46,7 @@ public class CardBehaviour : MonoBehaviour, IPointerClickHandler
     }
 
     [UsedImplicitly]
-    private void Selected()
+    public void Selected()
     {
         OnContentShown?.Invoke();
     }
@@ -58,12 +58,13 @@ public class CardBehaviour : MonoBehaviour, IPointerClickHandler
     }
     
     [UsedImplicitly]
-    public void OnPointerClick(PointerEventData eventData)
+    public void OnPointerDown(PointerEventData eventData)
     {
         Debug.Log("Click");
         if (State == CardState.ContentHidden || State == CardState.Appeared)
         {
             State = CardState.ContentShown;
+            Selected();
         }
     }
 
@@ -93,4 +94,9 @@ public class CardBehaviour : MonoBehaviour, IPointerClickHandler
         _currentTrigger = newTrigger;
         _animator.SetTrigger(_currentTrigger);
     }
+
+//    public void OnPointerDown(PointerEventData eventData)
+//    {
+//        throw new NotImplementedException();
+//    }
 }
